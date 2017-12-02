@@ -9,6 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.admin.wsretrofit.api.Server;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Admin on 30/11/2017.
  */
@@ -25,11 +33,50 @@ protected void onCreate(Bundle savedInstanceState) {
     final EditText etNome = (EditText) findViewById(R.id.et_nome);
     final EditText etTelefone = (EditText) findViewById(R.id.et_telefone);
     final EditText etInfo = (EditText) findViewById(R.id.et_cpf);
-    final EditText etEmail = (EditText) findViewById(R.id.et_mail);
     final Button btList = (Button) findViewById(R.id.bt_list);
 //    Contatinho ct = new Contatinho();
 
-//    Button btcad = (Button) findViewById(R.id.bt_cad);
+    Button btcad = (Button) findViewById(R.id.bt_cad);
+
+    btcad.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String nome = etNome.getText().toString();
+            String telefone= etTelefone.getText().toString();
+            String info = etInfo.getText().toString();
+
+            if (nome == null || nome.equals("")) {
+                Toast t = Toast.makeText(getApplicationContext(), "Insira um Nome!", Toast.LENGTH_SHORT);
+                t.show();
+            } else if (telefone == null || telefone.equals("")) {
+                Toast t = Toast.makeText(getApplicationContext(), "Insira o Telefone!", Toast.LENGTH_SHORT);
+                t.show();
+            } else if (info == null || info.equals("")) {
+                Toast t = Toast.makeText(getApplicationContext(), "Insira um cpf!", Toast.LENGTH_SHORT);
+                t.show();
+            }
+            else{
+            IContatinho sv =  Server.getClient().create(IContatinho.class);
+            Call<Contatinho> createContato = sv.inserir(nome,telefone, info);
+            createContato.enqueue(new Callback<Contatinho>() {
+                @Override
+                public void onResponse(Call<Contatinho> call, Response<Contatinho> response) {
+                    Toast t = Toast.makeText(getApplicationContext(), "Contatinho salvo com Successo!", Toast.LENGTH_SHORT);
+                t.show();
+                    Intent it = new Intent(MainHomeContatinho.this, MainActivity.class);
+                    startActivity(it);
+                }
+
+                @Override
+                public void onFailure(Call<Contatinho> call, Throwable t) {
+                    Toast t2 = Toast.makeText(getApplicationContext(), "Vai dar não..(SÓ DÁ ERRO JOW!)", Toast.LENGTH_SHORT);
+                    t2.show();
+                }
+                }
+            );
+        }
+        }
+    });
 //    Log.d("IDTE", String.valueOf(it.getStringExtra("id") ));
 //    if(it.getStringExtra("id") != null){
 //        UsuarioDao daos = new UsuarioDao(getApplicationContext());

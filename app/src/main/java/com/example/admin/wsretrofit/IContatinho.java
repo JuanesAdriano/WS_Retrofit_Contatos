@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -15,7 +16,7 @@ import retrofit2.http.Path;
  */
 
 public interface IContatinho {
-
+    @FormUrlEncoded
     @POST("contatinhos/")
     Call<Contatinho> inserir(@Field("nome")String nome, @Field("telefone")String telefone, @Field("info")String info);
 
@@ -27,7 +28,7 @@ public interface IContatinho {
 
     @DELETE("contatinos/{id}")
     Call<Contatinho> delete(@Path("id")int id);
-
+    @FormUrlEncoded
     @PUT("contatinhos/")
     Call<Contatinho> alterar(@Field("nome")String nome, @Field("telefone")String telefone, @Field("info")String info, @Field("id")String id);
 
