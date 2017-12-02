@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     String nome[];
     String telefone[];
-   String info[];
+    String info[];
     String id[];
 
 //    Contatinho contatinho = new Contatinho();
@@ -44,23 +44,43 @@ public class MainActivity extends AppCompatActivity {
         retreave();
 
 
-//        userList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-////            UsuarioDao usuarioDao = new UsuarioDao(getApplicationContext());
-////            @Override
-////            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-////                TextView textView = (TextView) view.findViewById(R.id.id);
-////                Log.d("IDTE",textView.getText().toString());
-////                if (usuarioDao.deleteUsuario(Integer.parseInt(textView.getText().toString()))) {
-////                    Toast.makeText(getApplicationContext(), "Usuário Deletado Com Sucesso!", Toast.LENGTH_LONG).show();
-////                    retreave();
-////                }
-////                return true;
-////            }
-//        });
+        userList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView textView = (TextView) view.findViewById(R.id.id);
+                final Integer  id = Integer.parseInt(textView.getText().toString());
+                IContatinho sv = Server.getClient().create(IContatinho.class);
+                Call<Contatinho> deleteContato = sv.delete(id);
+                deleteContato.enqueue(new Callback<Contatinho>() {
+                                          @Override
+                                          public void onResponse(Call<Contatinho> call, Response<Contatinho> response) {
+                                                if(response.code() == 200){
+                                              Toast t = Toast.makeText(getApplicationContext(), "Foi pro beleléuss"+id+"", Toast.LENGTH_SHORT);
+                                              t.show();
+
+                                              retreave();}else{
+                                                    Toast t3 = Toast.makeText(getApplicationContext(), "Erou "+response.code()+"", Toast.LENGTH_SHORT);
+                                                    t3.show();
+                                                }
+                                          }
+
+                                          @Override
+                                          public void onFailure(Call<Contatinho> call, Throwable t) {
+                                              Toast t2 = Toast.makeText(getApplicationContext(), "Desiste da crush não doido!", Toast.LENGTH_SHORT);
+                                              t2.show();
+                                          }
+                                      });
+
+
+
+                return true;
+            }
+        });
     }
 
     public void retreave() {
-        IContatinho sv =  Server.getClient().create(IContatinho.class);
+        IContatinho sv = Server.getClient().create(IContatinho.class);
         Call<ArrayList<Contatinho>> getAllContatos = sv.listaTodos();
 
         getAllContatos.enqueue(new Callback<ArrayList<Contatinho>>() {
@@ -78,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     i++;
                 }
                 ListView listView = (ListView) findViewById(R.id.usuarioList);
-                Adapter adapter = new Adapter(getApplicationContext(),  id, nome, telefone);
+                Adapter adapter = new Adapter(getApplicationContext(), id, nome, telefone);
                 listView.setAdapter(adapter);
             }
 
@@ -89,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private class Adapter extends ArrayAdapter<String> {
         Context context;
         int[] img;

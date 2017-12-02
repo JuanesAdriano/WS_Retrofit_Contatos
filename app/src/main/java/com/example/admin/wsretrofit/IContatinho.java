@@ -26,8 +26,8 @@ public interface IContatinho {
     @GET("contatinhos/{id}")
     Call<Contatinho> listaById(@Path("id")int id);
 
-    @DELETE("contatinos/{id}")
-    Call<Contatinho> delete(@Path("id")int id);
+    @DELETE("contatinhos/{id}")
+    Call<Contatinho> delete(@Path("id")Integer id);
     @FormUrlEncoded
     @PUT("contatinhos/")
     Call<Contatinho> alterar(@Field("nome")String nome, @Field("telefone")String telefone, @Field("info")String info, @Field("id")String id);
