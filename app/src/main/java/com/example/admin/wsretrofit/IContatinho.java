@@ -28,8 +28,9 @@ public interface IContatinho {
 
     @DELETE("contatinhos/{id}")
     Call<Contatinho> delete(@Path("id")Integer id);
+
     @FormUrlEncoded
     @PUT("contatinhos/")
-    Call<Contatinho> alterar(@Field("nome")String nome, @Field("telefone")String telefone, @Field("info")String info, @Field("id")String id);
+    Call<Contatinho> alterar(@Field("nome")String nome, @Field("telefone")String telefone, @Field("info")String info, @Field("id")int id);
 
 }

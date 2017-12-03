@@ -44,6 +44,38 @@ public class MainActivity extends AppCompatActivity {
         retreave();
 
 
+        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final TextView textView = (TextView) view.findViewById(R.id.id);
+                final Integer  id = Integer.parseInt(textView.getText().toString());
+                IContatinho sv = Server.getClient().create(IContatinho.class);
+                Call<Contatinho> retreaveId = sv.listaById(id);
+                retreaveId.enqueue(new Callback<Contatinho>() {
+                    @Override
+                    public void onResponse(Call<Contatinho> call, Response<Contatinho> response) {
+                        Contatinho contatinho = response.body();
+                        Bundle dados = new Bundle();
+                        Intent it = new Intent(MainActivity.this, EditaContatinho.class);
+                        dados.putInt("id", id);
+                        dados.putString("nome", contatinho.getNome());
+                        dados.putString("telefone", contatinho.getTelefone());
+                        dados.putString("info", contatinho.getInfo());
+                        it.putExtras(dados);
+                        startActivity(it);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Contatinho> call, Throwable t) {
+                        Toast t5 = Toast.makeText(getApplicationContext(), "LALALA SHIFUDE", Toast.LENGTH_SHORT);
+                        t5.show();
+                    }
+                });
+
+            }
+        });
+
+
         userList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
